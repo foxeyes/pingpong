@@ -1,0 +1,11 @@
+{
+  "name": "pingpong",
+  "version": "0.0.1",
+  "description": "PWA testing tool",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "alex.sova@pm.me",
+  "license": "ISC"
+}
