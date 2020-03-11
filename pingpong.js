@@ -1,25 +1,42 @@
-import * as puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer';
 import {DECOR} from './lib/console-decor.js';
+import {stat} from './lib/stat.js';
 
-// const sequence = async function(name, ...args) {
-//   console.log(DECOR.fg.yellow, 'Testing sequence started...' + DECOR.fg.white, name);
-//   let browser = await puppeteer.launch({
-//     headless: true,
-//   });
-//   let page = await browser.newPage();
-//   for (let i = 0; i < args.length; i++) {
-//     let stage = args[i];
-//     let resultCollector = [];
+export class PingPong {
 
-//     try {
-//       stage();
-//     } catch (err) {
-//       console.log(DECOR.fg.red, 'Error...');
-//     }
-//   }
-// }
+  /**
+   *
+   * @param {String} name
+   * @param {String} targetUrl
+   * @param {Boolean} [headless]
+   */
+  static async startSession(name, targetUrl, headless = true) {
+    console.log(DECOR.fg.blue, 'Step: ' + DECOR.fg.green, name, DECOR.fg.blue + 'Target URL: ' + DECOR.fg.green + targetUrl);
+    /** @type {Array<Boolean>} */
+    let resultCollector = [];
+    let browser = await puppeteer.launch({
+      headless: headless,
+    });
+    let page = await browser.newPage();
+    await page.goto(targetUrl, {
+      waitUntil: 'networkidle0',
+    });
+    return {
+      name: name,
+      browser: browser,
+      page: page,
+      resultCollector: resultCollector,
+      proceedAs: (name) => {
+        console.log(DECOR.fg.blue, 'Step: ' + DECOR.fg.green, name);
+      },
+      finish: (/** @type {String} */ finalMsg = null) => {
+        stat(name, resultCollector, finalMsg);
+      },
+    };
+  };
+}
 
-export {DECOR};
+export {DECOR, stat};
 export {getElementHandle} from './lib/get-element.js';
 export {check} from './lib/check.js';
-export {stat} from './lib/stat.js';
+
