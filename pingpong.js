@@ -39,4 +39,5 @@ export class PingPong {
 export {DECOR, stat};
 export {getElementHandle} from './lib/get-element.js';
 export {check} from './lib/check.js';
+export {checkVisible} from './lib/check-visible.js';
 
